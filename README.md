@@ -1,47 +1,33 @@
-🏥 Healthcare-streaming-platform — End-to-End Real-Time Data Engineering Project
+🏥 Healthcare Compliance Automation — End-to-End Real-Time Data Engineering Pipeline
 
-A complete HIPAA-friendly healthcare data pipeline built using Kafka, Spark Structured Streaming, Delta Lake, Airflow, and Power BI to automate compliance reporting, PHI masking, and hospital performance analytics.
+A complete healthcare data engineering project built using Kafka, Spark Structured Streaming, Delta Lake, Airflow, and Power BI to automate PHI/PII masking, enforce HIPAA-friendly data handling, orchestrate ETL workflows, and generate hospital insights dashboards.
 
-This project simulates a real production-grade healthcare data platform capable of processing streaming patient events, masking sensitive PHI/PII, enforcing data quality, and generating clinical & compliance dashboards.
+🖼️ Architecture Diagram
 
-🚀 Architecture Overview
-Healthcare Source Data (CSV/JSON)
-           │
-           ▼
-   Kafka Producer → Kafka Topic
-           │
-           ▼
-   Spark Structured Streaming
-      - PHI/PII Masking
-      - Validation & Cleanup
-      - Deduplication
-           │
-           ▼
-       Delta Lake
-   (Bronze → Silver → Gold)
-           │
-           ▼
-        Airflow DAG
-   - Daily ETL Scheduling
-   - DQ Checks & Logging
-           │
-           ▼
-     Power BI Dashboards
-   - Patient Metrics
-   - Diagnosis Trends
-   - Hospital KPIs
-   - Compliance Reports
+This diagram illustrates the real-time flow of health data from ingestion → masking → Delta Lake → Airflow → Power BI dashboards.
 
-🏗️ Tech Stack
-Layer	Technology
-Streaming	Apache Kafka, Zookeeper
-Real-time Processing	PySpark, Spark Structured Streaming
+🚀 Project Overview
+
+This platform simulates a real-world healthcare compliance system capable of:
+
+✔ Streaming patient data in real-time
+✔ Performing PHI/PII masking
+✔ Validating, cleaning, and deduplicating records
+✔ Storing data in Delta Lake (Bronze → Silver → Gold)
+✔ Running scheduled healthcare ETL tasks via Airflow
+✔ Powering interactive analytics dashboards in Power BI
+
+The full workflow is designed with HIPAA principles (masking + limited exposure) in mind.
+
+🏗️ Technology Stack
+Layer	Tools / Frameworks
+Ingestion	Apache Kafka, Python Producer
+Stream Processing	PySpark, Spark Structured Streaming
 Storage	Delta Lake (Bronze/Silver/Gold)
-Orchestration	Apache Airflow
-Programming	Python
-Dashboards	Power BI
-Deployment	Docker / Docker Compose
-📁 Project Folder Structure
+Workflow Orchestration	Apache Airflow
+Analytics	Power BI
+Containerization	Docker, Docker Compose
+📁 Folder Structure
 healthcare-compliance-automation/
 │
 ├── airflow/
@@ -50,18 +36,18 @@ healthcare-compliance-automation/
 │   └── docker-compose.yml
 │
 ├── data/
-│   ├── raw/          # incoming patient/claims files
-│   ├── masked/       # PHI/PII masked outputs
-│   └── processed/    # curated tables (Gold layer)
+│   ├── raw/
+│   ├── masked/
+│   └── processed/
 │
 ├── logs/
 │
 ├── producer/
 │   ├── kafka_producer.py
-│   └── sample_data.csv
+│   └── sample_patient_data.csv
 │
 ├── scripts/
-│   └── helper utilities
+│   └── helpers.py
 │
 ├── spark_streaming/
 │   ├── streaming_job.py
@@ -74,125 +60,135 @@ healthcare-compliance-automation/
 │
 └── docker-compose.yml
 
-🔐 PHI/PII Masking Rules
+🔐 PHI/PII Masking Logic
 
-Your pipeline performs healthcare-grade data anonymization:
+All sensitive medical fields are masked for compliance:
 
 Field	Masking Applied
-Patient Name	First letter + masked (e.g., J*****)
-SSN	Show last 4 digits only
-Phone	Masked middle digits
-Address	City + State only
-Date of Birth	Year only
-Email	First 2 chars + domain masked
+Name	Only first letter visible (J*****)
+SSN	Last 4 digits visible only
+Phone	Middle digits masked
+Email	First 2 letters + domain masked
+DOB	Year retained only
+Address	Only City, State preserved
 
-Ensures HIPAA-safe handling of health records.
+These transformations follow HIPAA de-identification principles.
 
-⚡ Real-Time Processing Logic
-✔ Spark Structured Streaming Performs:
+⚡ Real-Time Stream Processing Flow
+✔ Kafka Producer
 
-Reads events from Kafka topic: healthcare.data
+Reads healthcare CSV/JSON files
+
+Converts to JSON messages
+
+Publishes to Kafka topic: healthcare.data
+
+✔ Spark Structured Streaming
+
+Performs:
 
 Schema validation
 
-Null / corrupt record handling
-
-Deduplication using patient + timestamp
+Null handling
 
 PHI/PII masking
 
-Writes to Delta Lake:
+Deduplication
 
-Bronze → raw ingest
+Writes to Delta Lake in 3 layers:
 
-Silver → cleaned + masked
+Bronze → Raw Data  
+Silver → Cleaned + Masked  
+Gold   → Aggregated Analytics
 
-Gold → analytics-ready
+🌀 Airflow DAG — Healthcare Pipeline
 
-📅 Airflow Pipeline (ETL DAG)
+The DAG handles:
 
-Daily DAG performs:
+Daily ETL
 
-Trigger streaming/batch sync
+Data quality checks
 
-Validate Delta tables
+Logging & alerts
 
-Run quality checks
+Gold-layer table generation
 
-Generate logs
+Exporting curated data for analytics
 
-Create Gold-layer aggregated tables
+Airflow UI:
+http://localhost:8080
 
-Export data for Power BI
+📊 Power BI Analytics Dashboards
 
-📊 Power BI Dashboards
+Included dashboards:
 
-Your dashboards visualize key healthcare insights:
+🟦 1. Patient Admissions
 
-1. Patient Admissions Overview
+Daily/weekly/monthly patient inflow
 
-Daily/weekly/monthly admissions
+Department-level analysis
 
-Trends over time
+Admission trends
 
-Department-level breakdown
-
-2. Diagnosis & Treatment Trends
+🟦 2. Diagnosis Trends
 
 Top diagnoses
 
-Case severity distribution
+Severity categories
 
-Patient outcomes
+Treatment volume by department
 
-3. Hospital Operational KPIs
+🟦 3. Hospital Operational KPIs
 
 Bed occupancy rate
 
-Average length of stay
+Avg length of stay
 
-Doctor/Dept performance
+Doctor & department performance
 
-4. Compliance Monitoring Dashboard
-
-Masking success rate
+🟦 4. Compliance Monitoring
 
 Missing PHI counts
 
-Invalid record tracking
+Masking success rates
 
-▶️ How to Run the Project (Fully Reproducible)
-1️⃣ Start Kafka & Airflow
-docker-compose up -d
+Validation failures
 
-2️⃣ Run Producer
-python producer/kafka_producer.py
-
-3️⃣ Start Spark Stream
-spark-submit spark_streaming/streaming_job.py
-
-4️⃣ Open Airflow UI
-http://localhost:8080
-
-
-Trigger DAG:
-healthcare_pipeline_dag
-
-5️⃣ Load dashboards in Power BI
-
-Open:
+Dashboards are available in:
 
 dashboards/healthcare_overview.pbix
+dashboards/screenshots/
 
-🎯 Key Highlights for Recruiters / Resume
+▶️ How to Run the Pipeline
+1. Start Kafka, Zookeeper, Airflow
+docker-compose up -d
 
-✔ Real-time streaming pipeline with Kafka & Spark
-✔ Delta Lake Bronze-Silver-Gold architecture
-✔ PHI/PII masking (HIPAA compliance simulation)
-✔ Automated Airflow ETL workflows
-✔ Clean folder structure for production systems
-✔ Power BI dashboards for insights
-✔ End-to-end data engineering implementation
+2. Run Producer
+python producer/kafka_producer.py
+
+3. Start Spark Streaming
+spark-submit spark_streaming/streaming_job.py
+
+4. Trigger Airflow DAG
+
+In Airflow UI → Run:
+healthcare_pipeline_dag
+
+5. Open Power BI Dashboard
+
+Load:
+dashboards/healthcare_overview.pbix
+
+🎯 Key Features Recruiters Will Love
+
+✔ End-to-end real-time data engineering project
+✔ Full Delta Lake architecture implementation
+✔ Healthcare PHI/PII masking and compliance
+✔ Airflow DAG with DQ checks
+✔ Power BI dashboards for hospital insights
+✔ Clean, production-style folder structure
+✔ Docker-based reproducible environment
+✔ Professional documentation & diagram
 
 🧑‍💻 Author
 
