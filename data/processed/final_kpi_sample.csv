@@ -1,0 +1,4 @@
+event_type,avg_heart_rate,avg_temperature,count_events
+vitals,95,100.3,1
+lab_result,78,97.2,1
+medication,89,99.3,1
