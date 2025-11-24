@@ -81,7 +81,7 @@ PHI/PII Masking → Delta Lake (Bronze → Silver → Gold) → Airflow Orchestr
 - Automated data refresh workflows
 - Pipeline monitoring and alerting
 
-#### ✔️ **Power BI**
+####  **Power BI**
 - Connects to curated Gold Layer
 - Visualizes real-time insights
 - Interactive dashboards for stakeholders
