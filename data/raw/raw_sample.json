@@ -1,0 +1,3 @@
+{"patient_id": 3428, "event_type": "vitals", "heart_rate": 95, "blood_pressure": "127/80", "temperature": 100.3, "timestamp": "2025-11-24T21:10:17.114316"}
+{"patient_id": 5526, "event_type": "lab_result", "heart_rate": 78, "blood_pressure": "138/79", "temperature": 97.2, "timestamp": "2025-11-24T21:10:18.157767"}
+{"patient_id": 7992, "event_type": "medication", "heart_rate": 89, "blood_pressure": "114/71", "temperature": 99.3, "timestamp": "2025-11-24T21:10:12.993301"}
